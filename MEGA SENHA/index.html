@@ -1,0 +1,77 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Senha</title>
+    <!-- Normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" 
+    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- JavaScript -->
+    <script defer src="assets/javascript/main.js"></script>
+</head>
+<body>
+    <section>
+        <!-- 1. Tela de Configuração (Modo Professor) -->
+    <div class="app">
+        <div id="config-screen" class="content">
+            <h1>Modo Professor</h1>
+             <label for="secret-word-input" class="title-Word">
+                Palavra Secreta:
+                <input type="text" id="secret-word-input" v-model="secretWord" class="input-Word" />
+            </label>
+            <button id="startGame" class="start-Button">Iniciar Jogo</button>
+        </div>
+    </div>
+        <!-- 2. Tela do Menu Principal -->
+    <div id="main-menu" class= "hidden app content" >
+        <h1 class="title-big">
+            Mega Senha
+        </h1>
+        <p class="subtitle">Decifre o código! Descifre cada letra para descobrir a palavra</p>
+        <!-- Letras em Binario -->
+        <div id="letter-binary" class="card-Letter-Binary">
+            <h2 class="text-Title">Letras em Binario:</h2>
+            <div id="alphabet-display" class="flex-Wrap-Center">
+                <!-- Letras em binario serão injetadas aqui -->
+            </div>
+        </div>
+        <div>
+            <label for="letter-input" class="title-Word">
+                Letra Descodificadada:
+                <input type="text" id="letter-input" v-model="secretWord" class="input-Word" />
+            </label>
+            <p id="guess-message" style="font-size: 1.5rem;"></p>
+            <button id="confirm-Button" class="confirm-Button">Confirmar</button>
+        </div>
+        
+        <button id="show-Congrats-Screen" class="show-Congrats-Screen" >
+            Mostrar Palavra
+        </button>
+    </div>
+        <!-- 3. Tela de Parabéns -->
+    <div id="congrats-screen" class="hidden app content">
+      <div class="congrats-Throphy">
+            🏆
+        </div>
+        <h1 class="congrats-Big-Text">
+            CÓDIGO DECRIPTADO!
+        </h1>
+        <p class="congrats-Text">
+            A Palavra Secreta era:
+        </p>
+        <p id="final-word-display" class="word-Secret">
+            SANTOS MAIOR DO MUNDO!!!<!-- Palavra final será injetada aqui -->
+        </p>
+        <p class="final-Message">
+            Você é um mestre da codificação binária!
+        </p>
+        <button id="restart-button" class="restart-Button">Reiniciar</button>
+    </div>
+    </section>
+</body>

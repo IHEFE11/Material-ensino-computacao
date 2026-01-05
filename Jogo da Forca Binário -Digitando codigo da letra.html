@@ -1,0 +1,485 @@
+<html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca Binário - Aventura Robo-Coding</title>
+    <!-- Carrega o Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuração de fonte amigável e fofa */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #1f2937, #374151); /* Fundo escuro tecnológico */
+        }
+        .container {
+            max-width: 1600px; /* Largura para formato 16:9 */
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .robot-head {
+            color: #d1fae5; /* Cor verde-claro para o robô */
+        }
+        .grid-container {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+        .number-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .number-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(100, 255, 100, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .revealed {
+            background-color: #fca5a5; /* Vermelho suave para números já clicados */
+            cursor: default;
+            pointer-events: none;
+            opacity: 1; /* Mantém a opacidade total quando revela a letra */
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .binary-code {
+            font-family: monospace;
+            letter-spacing: 0.2rem;
+        }
+        /* Efeito de código de circuito (Fundo) */
+        .circuit-bg {
+            background-image: radial-gradient(#10b981 1px, transparent 1px), radial-gradient(#10b981 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        /* Estilo para os traços da forca */
+        .word-container span {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 50px;
+            margin: 0 4px;
+            border-bottom: 5px solid #f9fafb; /* Linha de traço */
+            color: #fde047; /* Cor da letra revelada (Amarelo neon) */
+            font-size: 2.5rem;
+            font-weight: 700;
+            user-select: none;
+            line-height: 1;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        .animate-bounce-custom {
+            animation: bounce 1.5s infinite;
+        }
+        #alphabet-display span {
+            /* Estilo base para os quadrados de status do alfabeto */
+            margin: 2px;
+            padding: 4px 8px;
+            min-width: 32px;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-3{margin-right:0.75rem}.mt-4{margin-top:1rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.w-10{width:2.5rem}.w-32{width:8rem}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-lg{max-width:32rem}.max-w-xl{max-width:36rem}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.gap-1{gap:0.25rem}.gap-4{gap:1rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border-4{border-width:4px}.border-b-8{border-bottom-width:8px}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-pink-400{--tw-border-opacity:1;border-color:rgb(244 114 182 / var(--tw-border-opacity, 1))}.border-pink-500{--tw-border-opacity:1;border-color:rgb(236 72 153 / var(--tw-border-opacity, 1))}.border-purple-500{--tw-border-opacity:1;border-color:rgb(168 85 247 / var(--tw-border-opacity, 1))}.border-yellow-400{--tw-border-opacity:1;border-color:rgb(250 204 21 / var(--tw-border-opacity, 1))}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-gray-700{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.bg-gray-800{--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-pink-600{--tw-bg-opacity:1;background-color:rgb(219 39 119 / var(--tw-bg-opacity, 1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234 / var(--tw-bg-opacity, 1))}.p-10{padding:2.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-8{padding-left:2rem;padding-right:2rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-2{padding-bottom:0.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text7xl{font-size:4rem;line-height:1}.text-9xl{font-size:8rem;line-height:1}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.text-cyan-300{--tw-text-opacity:1;color:rgb(103 232 249 / var(--tw-text-opacity, 1))}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.text-gray-100{--tw-text-opacity:1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-green-300{--tw-text-opacity:1;color:rgb(134 239 172 / var(--tw-text-opacity, 1))}.text-green-400{--tw-text-opacity:1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.text-pink-400{--tw-text-opacity:1;color:rgb(244 114 182 / var(--tw-text-opacity, 1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-300{--tw-text-opacity:1;color:rgb(253 224 71 / var(--tw-text-opacity, 1))}.text-yellow-400{--tw-text-opacity:1;color:rgb(250 204 21 / var(--tw-text-opacity, 1))}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-500{transition-duration:500ms}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-green-700:hover{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.hover\:bg-pink-700:hover{--tw-bg-opacity:1;background-color:rgb(190 24 93 / var(--tw-bg-opacity, 1))}.hover\:bg-purple-700:hover{--tw-bg-opacity:1;background-color:rgb(126 34 206 / var(--tw-bg-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-4:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-pink-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(236 72 153 / var(--tw-ring-opacity, 1))}</style></head>
+<body class="circuit-bg">
+
+<div id="app" class="container text-center text-gray-100 flex flex-col items-center">
+
+    <!-- 1. Tela de Configuração (Modo Professor) -->
+    <div id="config-screen" class="w-full max-w-lg bg-gray-800 p-8 rounded-2xl shadow-2xl border-4 border-purple-500 transition-opacity duration-500" style="min-height: 400px;">
+        <h1 class="text-4xl font-extrabold text-purple-400 mb-6">Modo Professor</h1>
+        <p class="text-xl text-cyan-300 mb-6">Defina a palavra secreta para o desafio de código!</p>
+        
+        <label for="secret-word-input" class="block text-2xl font-bold text-white mb-2">Palavra Secreta (A-Z):</label>
+        <input type="text" id="secret-word-input" maxlength="15" class="w-full text-center text-4xl p-3 mb-4 rounded-lg border-4 border-yellow-500 text-gray-900 uppercase focus:outline-none focus:ring-4 focus:ring-pink-500" placeholder="PROGRAMACAO">
+        
+        <p id="config-message" class="text-xl font-semibold mb-6 text-white" style="min-height: 24px;"></p>
+
+        <button id="start-game-button" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full text-xl number-button">
+            Iniciar Jogo
+        </button>
+        <p class="text-sm text-gray-400 mt-4">Mínimo de 4 letras. Apenas caracteres A-Z.</p>
+    </div>
+
+    <!-- 2. Tela do Menu Principal (Números 1-26) -->
+    <div id="main-menu" class="hidden w-full flex flex-col items-center p-6 transition-opacity duration-500">
+        <h1 class="text-5xl font-extrabold text-green-400 mb-2 mt-4 flex items-center">
+            <svg class="w-10 h-10 mr-3 robot-head" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a3 3 0 00-3 3v2a3 3 0 006 0V5a3 3 0 00-3-3zM4 11V8a6 6 0 0112 0v3c.18 1.05.51 2.06 1 3h-2.29c-.77-2.32-2.31-3-3.71-3s-2.94.68-3.71 3H3c.49-.94.82-1.95 1-3zm-1 5a1 1 0 001 1h12a1 1 0 001-1v-1a1 1 0 00-1-1H4a1 1 0 00-1 1v1z"></path></svg>
+            A Forca do Robô
+        </h1>
+        <p class="text-xl text-cyan-300 mb-8 font-medium">Decifre o código! Escolha um número, descubra o binário e chute a letra para montar a palavra-chave.</p>
+
+        <!-- Container da Forca (Palavra Secreta) -->
+        <div id="hangman-area" class="bg-gray-700 p-6 rounded-xl shadow-lg mb-8 w-full max-w-lg border-4 border-yellow-400">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4">Palavra Secreta:</h2>
+            <div id="word-display" class="word-container flex justify-center flex-wrap" style="min-height: 60px;">
+                <!-- Traços da palavra serão gerados aqui -->
+            </div>
+            <p id="message" class="mt-4 text-xl font-semibold"></p>
+        </div>
+        
+        <!-- Feedback de Status do Alfabeto (Termo-like) - NOVO -->
+        <div id="alphabet-status" class="bg-gray-700 p-4 rounded-xl shadow-lg mb-8 w-full max-w-3xl border-4 border-pink-400">
+            <h2 class="text-xl font-bold text-pink-400 mb-3">Progresso de Decodificação:</h2>
+            <div id="alphabet-display" class="flex flex-wrap justify-center gap-1">
+                <!-- Status das letras A-Z será gerado aqui -->
+            </div>
+        </div>
+
+        <!-- Grade de Botões Numerados -->
+        <div id="render-binary" class="gap-4 p-4 bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl border-4 border-blue-500">
+            <!-- Botões serão gerados aqui pelo JS -->
+        </div>
+        <button id="show-Congrats-Screen" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full text-xl number-button" style="margin-top: 2rem;" >
+            Mostrar Palavra
+        </button>
+    </div>
+
+    <!-- 3. Tela de Parabéns (Fim de Jogo) -->
+    <div id="congrats-screen" class="hidden w-full max-w-xl bg-gray-800 p-10 rounded-3xl shadow-2xl border-4 border-yellow-500 transition-opacity duration-500">
+        <div class="text-9xl mb-4 animate-bounce-custom">
+            🏆
+        </div>
+        <h1 class="text-6xl font-extrabold text-green-400 mb-4">
+            CÓDIGO DECRIPTADO!
+        </h1>
+        <p class="text-3xl text-cyan-300 mb-4">
+            A Palavra Secreta era:
+        </p>
+        <p id="final-word-display" class="text7xl font-bold text-yellow-400 mb-8 border-b-8 border-yellow-400 inline-block px-4 pb-2">
+            <!-- Palavra final será injetada aqui -->
+        </p>
+        <p class="text-xl text-white mb-8">
+            Você é um mestre da codificação binária!
+        </p>
+
+        <p id="play-again-button" class="px-10 py-4 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-full text-2xl number-button">
+            Reinicie a página para jogar novamente
+        </p>
+    </div>
+
+</div>
+
+<script>
+    // --- Configurações do Jogo ---
+    let SECRET_WORD = "PROGRAMACAO"; // Palavra-chave secreta padrão (agora mutável)
+    const MIN_WORD_LENGTH = 4;
+    const MAX_NUMBERS = 26;
+    
+    // Função que retorna o código binário de 5 bits para letras A-Z
+const getBinaryCode = (letter) => {
+    // Converte a letra maiúscula para seu número no alfabeto (A=1, B=2, ..., Z=26)
+    const number = letter.toUpperCase().charCodeAt(0) - 64;
+    // Converte o número para binário com padding de 5 bits
+    return number.toString(2).padStart(5, '0');
+    };
+
+    // Gera um array de todas as letras do alfabeto (A-Z)
+    const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+    const secretWordLetters = new Set(); // Conjunto para verificar rapidamente se uma letra está na palavra secreta
+
+    // Mapeamento de Número (1-26) para Letra
+    let letters = [...alphabet];
+    let numberToLetterMap = {};
+
+    // Estado do Jogo
+    let revealedLetters = new Set(); // Armazena as letras que *estão* na palavra secreta e foram reveladas
+    let identifiedLetters = new Set();  // Armazena *TODAS* as letras corretamente identificadas (acerto de número->letra)
+    let clickedNumbers = new Set();  // Armazena os números já clicados
+    let currentCorrectLetter = '';
+    let currentClickedNumber = 0;
+    let isGameActive = false;
+
+    // --- Elementos DOM ---
+    const configScreen = document.getElementById('config-screen');
+    const mainMenu = document.getElementById('main-menu');
+    const congratsScreen = document.getElementById('congrats-screen'); 
+    const binaryContainer = document.getElementById('render-binary');
+    const wordDisplay = document.getElementById('word-display');
+    const chosenNumberEl = document.getElementById('chosen-number');
+    const binaryCodeEl = document.getElementById('binary-code');
+    const messageEl = document.getElementById('message');
+    const alphabetDisplay = document.getElementById('alphabet-display'); 
+    
+    // Configuração
+    const secretWordInput = document.getElementById('secret-word-input');
+    const configMessage = document.getElementById('config-message');
+    const startGameButton = document.getElementById('start-game-button');
+    
+    // Jogo
+    const guessInput = document.getElementById('guess-input');
+    const guessMessage = document.getElementById('guess-message');
+    const guessButton = document.getElementById('guess-button');
+    const backButton = document.getElementById('back-button');
+    const showCongratsScreenButton= document.getElementById('show-Congrats-Screen')
+
+    // Parabéns
+    const finalWordDisplay = document.getElementById('final-word-display'); 
+
+
+    // --- Funções de Inicialização e Lógica ---
+
+    // Reinicia o estado do jogo e o mapeamento de letras
+    function resetGame() {
+        revealedLetters = new Set();
+        identifiedLetters = new Set(); // Resetar o status das letras
+        clickedNumbers = new Set();
+        currentCorrectLetter = '';
+        currentClickedNumber = 0;
+        isGameActive = true;
+        
+        // Limpar e preencher o set de letras da palavra secreta
+        secretWordLetters.clear();
+        SECRET_WORD.split('').forEach(letter => secretWordLetters.add(letter));
+
+        // Reinicializa o mapeamento de números para letras (embaralha)
+        let newLetters = [...alphabet];
+        for (let i = newLetters.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newLetters[i], newLetters[j]] = [newLetters[j], newLetters[i]];
+        }
+        numberToLetterMap = {};
+        for (let i = 0; i < MAX_NUMBERS; i++) {
+            numberToLetterMap[i + 1] = newLetters[i];
+        }
+
+        renderBinaryInput();
+        renderWordDisplay();
+        renderAlphabetStatus(); 
+    }
+
+    // Gerencia o clique no botão "Iniciar Jogo"
+    function handleStartGame() {
+        const inputWord = secretWordInput.value.toUpperCase().trim();
+        
+        // 1. Validação da Palavra
+        if (inputWord.length < MIN_WORD_LENGTH) {
+            configMessage.textContent = `A palavra deve ter no mínimo ${MIN_WORD_LENGTH} letras.`;
+            configMessage.classList.add('text-red-400');
+            return;
+        }
+        if (!/^[A-Z]+$/.test(inputWord)) {
+            configMessage.textContent = "A palavra deve conter apenas letras (A-Z).";
+            configMessage.classList.add('text-red-400');
+            return;
+        }
+
+        // 2. Configura e Inicia o Jogo
+        SECRET_WORD = inputWord;
+        configMessage.textContent = '';
+        configScreen.classList.add('hidden');
+        mainMenu.classList.remove('hidden');
+        
+        resetGame();
+    }
+
+
+    // 1. Inicializa ou Redesenha a Grade de Botões
+    function renderBinaryInput() {
+    if (!isGameActive) return;
+    const binaryContainer = document.getElementById('render-binary');
+    binaryContainer.innerHTML = '';
+
+    // Container principal
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex flex-col gap-6 justify-center items-center p-4';
+
+    // Texto de instrução
+    const instruction = document.createElement('p');
+    instruction.className = 'text-white text-xl font-bold';
+    instruction.textContent = 'Converta o Binário para Letra';
+    wrapper.appendChild(instruction);
+
+    // Linha dos Inputs
+    const inputsRow = document.createElement('div');
+    inputsRow.className = 'flex gap-2 justify-center items-center';
+
+    const inputs = [];
+    for (let i = 0; i < 5; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.placeholder = '0';
+        input.className = `w-14 h-20 text-center text-4xl font-extrabold rounded-xl bg-gray-700 text-green-400 border-4 border-green-500 focus:border-white focus:ring-2 focus:ring-green-300 outline-none transition-all shadow-inner`;
+        
+        input.addEventListener('input', (e) => {
+            if (e.target.value !== '0' && e.target.value !== '1') {
+                e.target.value = '';
+                return;
+            }
+            if (input.nextElementSibling && e.target.value !== '') {
+                input.nextElementSibling.focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && input.previousElementSibling) {
+                input.previousElementSibling.focus();
+            }
+            if (e.key === 'Enter') confirmBtn.click();
+        });
+
+        inputs.push(input);
+        inputsRow.appendChild(input);
+    }
+    wrapper.appendChild(inputsRow);
+
+    // Botão Confirmar
+    const confirmBtn = document.createElement('button');
+    confirmBtn.textContent = 'DECODIFICAR LETRA';
+    confirmBtn.className = 'px-12 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-full text-xl shadow-[0_6px_0_rgb(29,78,216)] active:shadow-none active:translate-y-1 transition-all';
+    
+    confirmBtn.onclick = () => {
+        const binary = inputs.map(inp => inp.value || '0').join('');
+        const decimal = parseInt(binary, 2);
+
+        // Validação do intervalo A-Z (1 a 26)
+        if (decimal < 1 || decimal > 26) {
+            messageEl.textContent = `O valor ${decimal} está fora do alfabeto (1-26)!`;
+            messageEl.className = "mt-4 text-xl font-semibold text-orange-400";
+        } else {
+            const letterFound = String.fromCharCode(64 + decimal); // Lógica 1=A, 2=B...
+            
+            if (clickedNumbers.has(decimal)) {
+                messageEl.textContent = `A letra "${letterFound}" já foi testada!`;
+                messageEl.className = "mt-4 text-xl font-semibold text-yellow-400";
+            } else {
+                clickedNumbers.add(decimal);
+                identifiedLetters.add(letterFound);
+
+                if (secretWordLetters.has(letterFound)) {
+                    revealedLetters.add(letterFound);
+                    messageEl.textContent = `🎉 EXCELENTE! ${binary} (${decimal}) é a letra "${letterFound}"!`;
+                    messageEl.className = "mt-4 text-xl font-semibold text-green-400";
+                } else {
+                    messageEl.textContent = `❌ ${binary} é "${letterFound}", mas não está na palavra secreta.`;
+                    messageEl.className = "mt-4 text-xl font-semibold text-red-400";
+                }
+
+                renderWordDisplay();
+                renderAlphabetStatus();
+            }
+        }
+
+        // Limpa e foca no início para a próxima jogada
+        inputs.forEach(inp => inp.value = '');
+        inputs[0].focus();
+    };
+
+    wrapper.appendChild(confirmBtn);
+    binaryContainer.appendChild(wrapper);
+    }
+
+
+    // 2. Inicializa ou Redesenha a Palavra Secreta (Forca)
+    function renderWordDisplay() {
+        if (!isGameActive) return;
+
+        wordDisplay.innerHTML = '';
+        let isWordComplete = true;
+
+        SECRET_WORD.split('').forEach(targetLetter => {
+            const span = document.createElement('span');
+            
+            if (revealedLetters.has(targetLetter)) {
+                // Letra revelada, mostra a letra
+                span.textContent = targetLetter;
+            } else {
+                // Letra ainda não revelada, mostra o traço
+                span.textContent = ''; // O traço é a borda inferior via CSS
+                isWordComplete = false;
+            }
+            wordDisplay.appendChild(span);
+        });
+
+        if (isWordComplete) {
+            // Se a palavra estiver completa, mostra a tela de parabéns
+            showCongratsScreen();
+        } else {
+            messageEl.textContent = "";
+            messageEl.classList.remove('text-yellow-400');
+        }
+    }
+
+    // 3. Renderiza o status do alfabeto (Termo-like)
+    function renderAlphabetStatus() {
+        alphabetDisplay.innerHTML = '';
+
+        alphabet.forEach(letter => {
+            const span = document.createElement('span');
+            span.textContent = letter;
+            span.classList.add(
+                'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 
+                'rounded-md', 'font-bold', 'text-sm', 'transition-colors'
+            );
+
+            // 1. Letra identificada E está na palavra secreta (Verde - Acerto total)
+            if (revealedLetters.has(letter)) {
+                span.classList.add('bg-green-500', 'text-gray-900');
+            } 
+            // 2. Letra identificada, mas NÃO está na palavra secreta (Vermelho - Decodificada, mas não usada)
+            else if (identifiedLetters.has(letter)) {
+                span.classList.add('bg-red-400', 'text-white');
+            }
+            // 3. Não identificada (Padrão)
+            else {
+                span.classList.add('bg-gray-500', 'text-white');
+            }
+
+            alphabetDisplay.appendChild(span);
+        });
+    }
+
+
+    // Mostra a tela de Parabéns
+    function showCongratsScreen() {
+        isGameActive = false;
+        mainMenu.classList.add('hidden');
+        congratsScreen.classList.remove('hidden');
+        
+        finalWordDisplay.textContent = SECRET_WORD;
+
+        document.querySelectorAll('.number-button').forEach(btn => {
+            btn.disabled = true;
+  
+        });
+    }
+
+    // 6. Gerencia o Botão "Voltar" (Manual ou Automático)
+    function handleBackClick() {
+        // Reseta botões e estado de input
+        guessInput.disabled = false;
+        guessButton.disabled = false;
+        guessMessage.textContent = '';
+        
+        // Transiciona de volta para o menu principal
+        revealScreen.classList.add('hidden');
+        mainMenu.classList.remove('hidden');
+
+        // Redesenha a grade (incluindo marcação de sucesso) e a palavra e o alfabeto
+        renderBinaryInput();
+        renderWordDisplay();
+        renderAlphabetStatus();
+    }
+
+    // --- Inicialização ---
+
+    // Define a palavra padrão no input
+    secretWordInput.value = SECRET_WORD;
+
+    // Adiciona listeners
+    startGameButton.addEventListener('click', handleStartGame);
+    showCongratsScreenButton.addEventListener('click', showCongratsScreen);
+
+    // Adiciona listener para a tecla Enter no campo de chute
+    guessInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+            handleGuess();
+        }
+    });
+
+    // Inicia a tela de configuração
+    configScreen.classList.remove('hidden');
+    mainMenu.classList.add('hidden');
+
+</script></body></html>
