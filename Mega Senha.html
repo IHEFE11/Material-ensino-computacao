@@ -1,0 +1,428 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Senha</title>
+    <!-- Normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" 
+    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+</head>
+<style>
+    
+* {
+    font-family: 'Jersey 10', sans-serif;
+}
+body{
+  background-color: #daf5ff;
+}
+.app{
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.content {
+  width: 100%;
+  max-width: 32rem;
+  background-color: #284e65; 
+  padding: 2rem; 
+  border-radius: 1rem; 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+  border: 4px solid #87CEEB; 
+  transition: opacity 0.5s ease;
+  margin-block: 10rem;
+}
+.title {
+  font-size: 2.5rem; 
+  font-weight: bold; 
+  color: #f3f4f6; 
+  text-align: center; 
+  margin-bottom: 1.5rem; 
+}
+.input-Word {
+width: 100%;                 
+  text-align: center;          
+  font-size: 2.25rem;          
+  line-height: 2.5rem;
+  padding: 0.75rem;           
+  margin-bottom: 1rem;         
+  border-radius: 0.5rem;       
+  border: 4px solid#10d000;   
+  color: #111827;              
+  text-transform: uppercase;   
+}
+.title-Word {
+  display: block;         
+  font-size: 1.5rem;       
+  line-height: 2rem;
+  font-weight: 700;        
+  color: #ffffff;          
+  margin-bottom: 0.5rem;       
+}
+.start-Button {
+  width: 50%;                 
+  background-color: #10d000;           
+  font-size: 1.25rem;          
+  font-weight: 700;            
+  padding: 0.75rem;           
+  border: none;                
+  border-radius: 0.5rem;       
+  cursor: pointer;             
+  transition: background-color 0.3s ease;
+}
+.main-Menu {
+  width: 100%;
+  max-width: 48rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  transition: opacity 0.5s ease;
+}
+.title-Big {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 800;
+  color: #4ade80;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+.subtitle { 
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  color: #67e8f9;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.card-Letter-Binary {
+  background-color: #374151;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25),
+              0 4px 6px -4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 48rem;
+  border: 4px solid yellow;
+}
+.text-Title {
+  font-size: 1.75rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: whitesmoke;
+  margin-bottom: 0.75rem;
+
+}
+.flex-Wrap-Center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 3rem;
+  margin: 1rem 0 1rem 0;
+
+}
+.confirm-Button {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 9999px;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.show-Congrats-Screen{
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: #16a34a;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 9999px;
+  font-size: 1.25rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.congrats-Screen{
+  width: 100%;
+  max-width: 48rem;
+  background-color: #22c55e; 
+  padding: 2rem; 
+  border-radius: 1rem; 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
+  border: 4px solid #16a34a; 
+  transition: opacity 0.5s ease;
+  margin-block: 10rem;
+  text-align: center;
+}
+.congrats-Throphy {
+  font-size: 8rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+  animation: bounce-custom 1.5s infinite;
+  margin-top: 16px;
+}
+@keyframes bounce-custom {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+.congrats-Big-Text{
+  font-size: 3.75rem;
+  line-height: 1;
+  font-weight: 800;
+  color: #4ade80;
+  margin-bottom: 1rem;
+}
+.congrats-Text{  
+  font-size: 2rem;
+  line-height: 2.25rem;
+  color: #67e8f9;
+  margin: 1rem 0 1rem 0;
+}
+.word-Secret{
+  font-size: 3rem;
+  line-height: 2.25rem;
+  color: gold;
+  margin: 2rem 0 2rem 0;
+}
+.restart-Button {
+  width: 50%;                 
+  background-color: #10d000;           
+  font-size: 1.25rem;          
+  font-weight: 700;            
+  padding: 0.75rem;           
+  border: none;                
+  border-radius: 0.5rem;       
+  cursor: pointer;             
+  transition: background-color 0.3s ease;
+}
+.final-Message {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+.hidden {
+  display: none;
+}
+/*.letter-Binary-span {
+  background-color: #374151;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25),
+              0 4px 6px -4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 2rem;
+  width: 50%;
+  border: 4px solid #D4AF37;
+}
+*/
+.letter-Binary-span {
+    background-color: #374151;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
+    border: 4px solid #D4AF37;
+    font-size: 2rem;
+}
+.correct {
+    background-color: #16a34a;
+    border-color: #22c55e;
+    width: 2rem;
+}
+
+</style>
+<body>
+    <section>
+        <!-- 1. Tela de Configuração (Modo Professor) -->
+    <div class="app">
+        <div id="config-screen" class="content">
+            <h1>Modo Professor</h1>
+             <label for="secret-word-input" class="title-Word">
+                Palavra Secreta:
+                <input type="text" id="secret-word-input" v-model="secretWord" class="input-Word" />
+            </label>
+            <button id="startGame" class="start-Button">Iniciar Jogo</button>
+        </div>
+    </div>
+        <!-- 2. Tela do Menu Principal -->
+    <div id="main-menu" class= "hidden app content" >
+        <h1 class="title-big">
+            Mega Senha
+        </h1>
+        <p class="subtitle">Decifre o código! Descifre cada letra para descobrir a palavra</p>
+        <!-- Letras em Binario -->
+        <div id="letter-binary" class="card-Letter-Binary">
+            <h2 class="text-Title">Letras em Binario:</h2>
+            <div id="alphabet-display" class="flex-Wrap-Center">
+                <!-- Letras em binario serão injetadas aqui -->
+            </div>
+        </div>
+        <div>
+            <label for="letter-input" class="title-Word">
+                Letra Descodificadada:
+                <input type="text" id="letter-input" v-model="secretWord" class="input-Word" />
+            </label>
+            <p id="guess-message" style="font-size: 1.5rem;"></p>
+            <button id="confirm-Button" class="confirm-Button">Confirmar</button>
+        </div>
+        
+        <button id="show-Congrats-Screen" class="show-Congrats-Screen" >
+            Mostrar Palavra
+        </button>
+    </div>
+        <!-- 3. Tela de Parabéns -->
+    <div id="congrats-screen" class="hidden app content">
+      <div class="congrats-Throphy">
+            🏆
+        </div>
+        <h1 class="congrats-Big-Text">
+            CÓDIGO DECRIPTADO!
+        </h1>
+        <p class="congrats-Text">
+            A Palavra Secreta era:
+        </p>
+        <p id="final-word-display" class="word-Secret">
+            SANTOS MAIOR DO MUNDO!!!<!-- Palavra final será injetada aqui -->
+        </p>
+        <p class="final-Message">
+            Você é um mestre da codificação binária!
+        </p>
+        <button id="restart-button" class="restart-Button">Reiniciar</button>
+    </div>
+    </section>
+</body>
+<script>
+let secretWord = '';
+let guessedLetters = new Set();
+
+const configScreen = document.getElementById('config-screen');
+const startGame = document.getElementById('startGame');
+const letterBinary = document.getElementById('letter-binary');
+const alphabetDisplay = document.getElementById('alphabet-display');
+const showCongratsScreen = document.getElementById('show-Congrats-Screen');
+const congratsScreen = document.getElementById('congrats-screen');
+const finalWordDisplay = document.getElementById('final-word-display');
+const restartButton = document.getElementById('restart-button');
+const mainMenu = document.getElementById('main-menu');
+const secretWordInput = document.getElementById('secret-word-input');
+const letterGuessInput = document.getElementById('letter-input');
+const confirm =  document.getElementById('confirm-Button');
+const guessMessage = document.getElementById('guess-message');
+
+function startGameHandler() {
+    configScreen.classList.add('hidden');
+    mainMenu.classList.remove('hidden');
+    console.log('Game Started');
+    secretWordInput.value.toUpperCase().trim();
+    secretWord = secretWordInput.value;
+    console.log('Palavra Secreta:', secretWord);
+    letterBinaryHandler();
+}
+
+function letterBinaryHandler() {
+    alphabetDisplay.innerHTML = ''; 
+    letterGuessInput.value = '';
+    letterGuessInput.focus();
+    let isWordComplete = true;
+    secretWord.split('').forEach(letter => {
+        const span = document.createElement('span');
+        span.classList.add('letter-Binary-span');
+        const upperChar = letter.toUpperCase();
+        console.log('Letra atual:', letter);
+        console.log('Letras adivinhadas:', guessedLetters);
+            if (guessedLetters.has(upperChar)) {
+            span.textContent = upperChar;
+            span.classList.add('correct');
+            }
+            else { 
+                if (/^[A-Z]$/.test(letter.toUpperCase())) {
+                letter = letter.toUpperCase().charCodeAt(0) - 64;
+                letter = letter.toString(2).padStart(5, '0');
+                span.textContent = letter
+                isWordComplete = false;
+                }
+       }       
+       isWordComplete = isWordComplete && guessedLetters.has(upperChar);
+       console.log('isWordComplete:', isWordComplete);
+     alphabetDisplay.appendChild(span);
+    });
+    if (isWordComplete) {
+        showCongratsScreenHandler();
+    }
+}
+
+function guessLetterHandler() {
+    const guessedLetter = letterGuessInput.value.toUpperCase().trim();
+    if (guessedLetter.length !== 1 || !/^[A-Z]$/.test(guessedLetter)) {
+        guessMessage.textContent = 'Por favor, insira uma única letra válida (A-Z).';
+        return;
+    }
+
+    if(guessedLetters.has(guessedLetter)){
+        guessMessage.textContent = 'você já tentou essa letra. Tente outra!';
+        console.log(guessedLetters);
+        console.log('Letra correta adivinhada:', guessedLetter);
+        return;
+    } else {
+        if (secretWord.toUpperCase().includes(guessedLetter.toUpperCase())) {
+        guessMessage.textContent = `Parabéns! A letra "${guessedLetter}" está na palavra secreta.`;
+        let letterReveled = guessedLetter;
+        guessedLetters.add(guessedLetter);        
+        letterBinaryHandler(letterReveled);
+    } 
+    else {
+        guessedLetters.add(guessedLetter);
+        guessMessage.textContent = `A letra "${guessedLetter}" não está na palavra secreta. Tente novamente!`;
+        } 
+    }
+    letterBinaryHandler();
+}
+function showCongratsScreenHandler() {
+    mainMenu.classList.add('hidden');
+    congratsScreen.classList.remove('hidden');
+    finalWordDisplay.textContent = secretWord.toUpperCase();
+
+}
+function restartGameHandler() {
+    congratsScreen.classList.add('hidden');
+    configScreen.classList.remove('hidden');
+    secretWord = '';
+    guessedLetters.clear();
+    secretWordInput.value = '';
+    letterGuessInput.value = '';
+    guessMessage.textContent = '';
+}
+
+confirm.addEventListener('click', guessLetterHandler);
+startGame.addEventListener('click', startGameHandler);
+restartButton.addEventListener('click', restartGameHandler);
+showCongratsScreen.addEventListener('click', showCongratsScreenHandler);
+letterGuessInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); 
+        guessLetterHandler();
+    }
+});
+
+</script>
